@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'main.dart';
+import '../main.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   @override
