@@ -1,25 +1,28 @@
 const express = require('express');
-const mysql = require('mysql2');
+const mongoose = require('mongoose');
 const app = express();
 const PORT = 3000;
 
+mongoose.connect('mongodb://localhost:27017/mydatabase', {
+    useNewUrlParser:true,
+    useUnifiedTopology:true
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));
 
-app.use(express.json());
+const userSchema = new mongoose.Schema({
+    username: String,
+    email: String,
+    password: String
+})
 
-const connection = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'Mamanlucie1906@@',
-    database: 'Blockchain'
-});
+const User = mongoose.model('User', userSchema);
 
-connection.connect(err => {
-    if (err) {
-        console.error('Error connecting to MySQL:', err);
-        process.exit(1);
-    }
-    console.log('Connected to MySQL');
-});
+const newUser = new User(userSchema);
+newUser.save()
+.then(() => console.log('User saved'))
+.catch(err => console.error(err));
+
 
 const bcrypt = require('bcrypt');
 
