@@ -68,9 +68,13 @@ contract RideEscrow is ReentrancyGuard, Ownable {
         _;
     }
 
-    constructor(address payable _treasury) Ownable(msg.sender) {
+    constructor(address payable _treasury, address registryAddress) Ownable(msg.sender) {
         require(_treasury != address(0), "Treasury cannot be zero address");
+        require(registryAddress != address(0),"Registry cannot be zero");
         treasury = _treasury;
+        registry = DriverRegistry(registryAddress);
+
+
     }
 
     /**
@@ -240,6 +244,7 @@ contract RideEscrow is ReentrancyGuard, Ownable {
         return address(this).balance;
     }
     function setDriverRegistry(address registryAddress) external onlyOwner {
+
         registry = DriverRegistry(registryAddress);
     }
 
