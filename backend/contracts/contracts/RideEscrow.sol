@@ -68,9 +68,11 @@ contract RideEscrow is ReentrancyGuard, Ownable {
         _;
     }
 
-    constructor(address payable _treasury) Ownable(msg.sender) {
+    constructor(address payable _treasury, address registryAddress) Ownable(msg.sender) {
         require(_treasury != address(0), "Treasury cannot be zero address");
+        require(registryAddress != address(0), "Registry cannot be zero");
         treasury = _treasury;
+        registry = DriverRegistry(registryAddress);
     }
 
     /**
@@ -106,6 +108,7 @@ contract RideEscrow is ReentrancyGuard, Ownable {
     onlyOwner
     rideExists(rideId)
     {
+        require(address(registry) != address(0), "Registry not set");
         require(registry.isDriverAvailable(driver), "Driver not available");
         require(rides[rideId].status == RideStatus.Requested, "Ride not in requested state");
         require(driver != address(0), "Driver cannot be zero address");
@@ -167,7 +170,10 @@ contract RideEscrow is ReentrancyGuard, Ownable {
 
         emit RideCompleted(rideId, block.timestamp);
         emit FundsReleased(rideId, ride.driver, driverPayout);
-        registry.updateDriverStats(ride.driver, 500); // or pass actual rating
+        if (address(registry) != address(0)) {
+            // Default 5.0 rating (scaled to 500) for now; integrate real rating later
+            registry.updateDriverStats(ride.driver, 500);
+        }
     }
 
     /**
@@ -240,6 +246,7 @@ contract RideEscrow is ReentrancyGuard, Ownable {
         return address(this).balance;
     }
     function setDriverRegistry(address registryAddress) external onlyOwner {
+        require(registryAddress != address(0), "Registry cannot be zero");
         registry = DriverRegistry(registryAddress);
     }
 

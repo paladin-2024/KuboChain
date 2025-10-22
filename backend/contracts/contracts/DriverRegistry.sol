@@ -4,12 +4,13 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title Decentralized DriverRegistry
  * @dev Permissionless NFT-based driver reputation. Soulbound badges, escrow-only updates.
  */
-contract DriverRegistry is ERC721, ERC721URIStorage {
+contract DriverRegistry is ERC721, ERC721URIStorage, Ownable {
     using Strings for uint256;
 
     enum DriverTier { Bronze, Silver, Gold }
@@ -22,6 +23,7 @@ contract DriverRegistry is ERC721, ERC721URIStorage {
         uint256 rating; // Cached avg (out of 500)
         DriverTier tier;
         bool isActive;
+        bool isAvailable; // Driver opt-in for assignments
         uint256 registrationTime;
     }
 
@@ -50,7 +52,7 @@ contract DriverRegistry is ERC721, ERC721URIStorage {
         _;
     }
 
-    constructor(address _escrow, address payable _treasury) ERC721("dRide Driver Badge", "DRIDE") {
+    constructor(address _escrow, address payable _treasury) ERC721("dRide Driver Badge", "DRIDE") Ownable(msg.sender) {
         escrowContract = _escrow;
         treasury = _treasury;
         emit EscrowContractSet(_escrow);
@@ -70,6 +72,7 @@ contract DriverRegistry is ERC721, ERC721URIStorage {
             rating: 500,
             tier: DriverTier.Bronze,
             isActive: false, // Activates on first ride
+            isAvailable: false, // Must opt-in to receive assignments
             registrationTime: block.timestamp
         });
         driverTokenIds[msg.sender] = tokenId;
@@ -82,6 +85,12 @@ contract DriverRegistry is ERC721, ERC721URIStorage {
 
         emit DriverRegistered(msg.sender, tokenId);
         return tokenId;
+    }
+
+    // Driver-controlled availability toggle
+    function setAvailability(bool available) external {
+        require(driverTokenIds[msg.sender] != 0, "Not registered");
+        drivers[msg.sender].isAvailable = available;
     }
 
     // Escrow-only stats update
@@ -123,6 +132,15 @@ contract DriverRegistry is ERC721, ERC721URIStorage {
         revert("Soulbound: Transfers disabled");
     }
 
+    // Prevent approvals on soulbound tokens
+    function approve(address to, uint256 tokenId) public override {
+        revert("Soulbound: Approvals disabled");
+    }
+
+    function setApprovalForAll(address operator, bool approved) public override {
+        revert("Soulbound: Approvals disabled");
+    }
+
     // Views
     function generateTokenURI(address driver) internal view returns (string memory) {
         DriverProfile memory profile = drivers[driver];
@@ -130,6 +148,7 @@ contract DriverRegistry is ERC721, ERC721URIStorage {
         uint256 avgInt = profile.rating / 100;
         uint256 avgDec = (profile.rating % 100) / 10;
         return string(abi.encodePacked(
+            'data:application/json;utf8,',
             '{"name": "dRide Badge - ', tierName,
             '", "attributes": [{"trait_type": "Tier", "value": "', tierName,
             '"}, {"trait_type": "Rides", "value": ', profile.totalRides.toString(),
@@ -145,7 +164,7 @@ contract DriverRegistry is ERC721, ERC721URIStorage {
 
     function isDriverAvailable(address driver) external view returns (bool) {
         DriverProfile memory profile = drivers[driver];
-        return driverTokenIds[driver] != 0 && profile.isActive;
+        return driverTokenIds[driver] != 0 && profile.isAvailable;
     }
 
     function getAverageRating(address driver) external view returns (uint256) {
@@ -160,5 +179,12 @@ contract DriverRegistry is ERC721, ERC721URIStorage {
     }
     function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) {
         return super.supportsInterface(interfaceId);
+    }
+
+    // Admin: link or update escrow contract
+    function setEscrowContract(address _escrow) external onlyOwner {
+        require(_escrow != address(0), "Escrow cannot be zero");
+        escrowContract = _escrow;
+        emit EscrowContractSet(_escrow);
     }
 }
