@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kubochain/screens/onboarding_screen.dart';
 
 import '../main.dart';
 class SplashScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(const Duration(seconds: 2), (){
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MyHomePage(title: 'KuboChain')));
+        MaterialPageRoute(builder: (_) => const OnBoardingScreen()));
     });
   }
 
