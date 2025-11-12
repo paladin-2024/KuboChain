@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kubochain/splash_screen.dart';
-
+import 'package:kubochain/screens/splash_screen.dart';
 void main() {
   runApp(const MyApp());
 }
