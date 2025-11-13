@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kubochain/main.dart';
 import 'package:kubochain/screens/intro_screens/intro_page_1.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'Auth/Login.dart';
-import 'home_page.dart';
 import 'intro_screens/intro_page_2.dart';
 import 'intro_screens/intro_page_3.dart';
+import 'onboarding.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -99,7 +97,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     GestureDetector(
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context){
-                          return LoginPage();
+                          return OnBoardingPage();
                         }));
                       },
                       child: Container(
