@@ -23,7 +23,7 @@ class OnBoardingPage extends StatelessWidget {
             // Image covering entire top including status bar area
             Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.5 + MediaQuery.of(context).padding.top,
+              height: MediaQuery.of(context).size.height * 0.6 + MediaQuery.of(context).padding.top,
               child: Image.asset(
                 'assets/bg-1.png',
                 fit: BoxFit.cover,
@@ -33,7 +33,7 @@ class OnBoardingPage extends StatelessWidget {
             // Content area
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(30.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -68,7 +68,11 @@ class OnBoardingPage extends StatelessWidget {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                return SignUpPage();
+                              }));
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
                               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -121,44 +125,44 @@ class OnBoardingPage extends StatelessWidget {
                         const SizedBox(height: 12),
 
                         // Login with Google Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context){
-                                return SignUpPage();
-                              }));
-                            },
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100),
+                        /*
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton(
+                              onPressed: () {
+
+                              },
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                side: const BorderSide(color: Colors.grey),
                               ),
-                              side: const BorderSide(color: Colors.grey),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Your custom Google icon from assets
-                                Image.asset(
-                                  'assets/google.png', // Replace with your actual Google icon path
-                                  width: 22,
-                                  height: 22,
-                                  fit: BoxFit.contain,
-                                ),
-                                const SizedBox(width: 10),
-                                const Text(
-                                  'Login with Google',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Your custom Google icon from assets
+                                  Image.asset(
+                                    'assets/google.png', // Replace with your actual Google icon path
+                                    width: 22,
+                                    height: 22,
+                                    fit: BoxFit.contain,
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 10),
+                                  const Text(
+                                    'Login with Google',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                          */
                       ],
                     ),
 
