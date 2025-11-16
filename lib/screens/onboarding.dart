@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kubochain/screens/Auth/login.dart';
+import 'Auth/signup.dart';
 
 class OnBoardingPage extends StatelessWidget {
   const OnBoardingPage({super.key});
@@ -122,7 +124,11 @@ class OnBoardingPage extends StatelessWidget {
                         SizedBox(
                           width: double.infinity,
                           child: OutlinedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                return SignUpPage();
+                              }));
+                            },
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
@@ -169,9 +175,13 @@ class OnBoardingPage extends StatelessWidget {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return LoginPage();
+                            }));
+                          },
                           child: const Text(
-                            'Sign In',
+                            'Log In',
                             style: TextStyle(
                               fontSize: 19,
                               color: Colors.blue,
