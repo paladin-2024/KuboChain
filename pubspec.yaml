@@ -63,6 +63,7 @@ flutter:
   assets:
      - assets/logo.png
      - assets/bg-1.png
+     - assets/google.png
      - assets/onboarding1.png
      - assets/onboarding2.png
      - assets/onboarding3.png
